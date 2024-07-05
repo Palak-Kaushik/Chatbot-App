@@ -1,5 +1,5 @@
 # Chatbot-App
-A chatbot app that allows users to interact with a large language model
+A chatbot app that allows users to interact with a large language model. LLM used is GPT-2
 
 
 ## Video links
@@ -15,22 +15,24 @@ App Demo : https://drive.google.com/file/d/1ej5eWnMcZiuloqIifWoUvB0tETTFaGlK/vie
 
 ## How to run the app
 
-download and extract the contents of a repo and open in VS Code/ any other ide of choice
+Download and extract the contents of a repo and open in VS Code or any other IDE of choice
+<br><br><br>
 
-in the terminal, run the following commands:
+In the terminal, run the following commands:
+<br><br>
 
 **cd chat**
 
 **npm install**
 
 **python backend.py**
+<br><br>
 
-
-this will start the backend. to start the frontend, open a separate terminal
-
-
+This will start the backend. To start the frontend, open a separate terminal. 
+<br><br>
 **cd chat**
 
 **npm start**
+<br><br>
 
-this will start the app on localhost, port 3000
+This will start the app on localhost, port 3000,
