@@ -1,48 +1,80 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'; 
+import './App.css';
 
 function App() {
   const [inputText, setInputText] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:5000/register', { username, password });
+      alert('Registration successful');
+    } catch (error) {
+      alert('Registration failed');
+      console.error(error);
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/login', { username, password });
+      setToken(response.data.access_token);
+      setIsAuthenticated(true);
+    } catch (error) {
+      alert('Login failed');
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
-    // Add user input to chat history
-    const updatedChatHistory = [
-      ...chatHistory,
-      { text: inputText, sender: 'user' }
-    ];
+    const updatedChatHistory = [...chatHistory, { text: inputText, sender: 'user' }];
     setChatHistory(updatedChatHistory);
     setInputText('');
 
-    // Send user input to backend
     try {
-      const response = await axios.post('http://localhost:5000/chat', { message: inputText });
+      const response = await axios.post('http://localhost:5000/chat', { message: inputText }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       const responseData = response.data;
-      
-      // Add AI response to chat history
+
       const updatedChatHistoryWithResponse = [
         ...updatedChatHistory,
         { text: responseData.message, sender: 'bot' }
       ];
       setChatHistory(updatedChatHistoryWithResponse);
     } catch (error) {
-      if (error.response) {
-        
-        console.log('Status:', error.response.status);
-        console.log('Data:', error.response.data);
-      } else if (error.request) {
-        
-        console.log('Request:', error.request);
-      } else {
-        
-        console.error('Error:', error.message);
-      }
+      console.error(error);
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={handleLogin}>
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button type="submit">Login</button>
+        </form>
+        <h1>Register</h1>
+        <form onSubmit={handleRegister}>
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button type="submit">Register</button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -67,4 +99,3 @@ function App() {
 }
 
 export default App;
-
