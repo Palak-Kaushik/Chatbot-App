@@ -27,6 +27,12 @@ function App() {
       const response = await axios.post('http://localhost:5000/login', { username, password });
       setToken(response.data.access_token);
       setIsAuthenticated(true);
+
+      // getting chat history 
+      const chatHistoryResponse = await axios.get('http://localhost:5000/chat/history', {
+        headers: { Authorization: `Bearer ${response.data.access_token}` }
+      });
+      setChatHistory(chatHistoryResponse.data.messages);
     } catch (error) {
       alert('Login failed');
       console.error(error);
@@ -57,9 +63,22 @@ function App() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:5000/logout', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setIsAuthenticated(false);
+      setToken('');
+      setChatHistory([]); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
-      <div>
+      <div className="container">
         <h1>Login</h1>
         <form onSubmit={handleLogin}>
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -77,8 +96,9 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>AI Chatbot</h1>
+      <button className="logout-button" onClick={handleLogout}>Logout</button>
       <div className="chat-container">
         {chatHistory.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
