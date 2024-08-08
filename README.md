@@ -15,18 +15,19 @@ Download and extract the contents of a repo and open in VS Code or any other IDE
 In the terminal, run the following commands:
 <br><br>
 
-**cd chat**
-
-**npm install**
-
-**python backend.py**
+    cd chat
+    
+    npm install
+    
+    python backend.py
 <br><br>
 
 This will start the backend. To start the frontend, open a separate terminal. 
 <br><br>
-**cd chat**
 
-**npm start**
+    cd chat
+    
+    npm start
 <br><br>
 
 This will start the app on localhost, port 3000,
